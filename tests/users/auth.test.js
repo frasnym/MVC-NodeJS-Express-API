@@ -4,9 +4,9 @@ const app = require("../../src/app");
 const UserModel = require("../../src/models/user.model");
 const { setupDatabase } = require("../fixtures/mongodb");
 
-beforeEach(setupDatabase);
+beforeAll(setupDatabase);
 
-test("Should register a new user", async () => {
+test("User - Auth: Register a new user (SUCCESS)", async () => {
 	const userData = {
 		full_name: "User Number One",
 		email_address: "un1@example.com",
@@ -20,7 +20,7 @@ test("Should register a new user", async () => {
 	expect(user.length).toBe(1);
 });
 
-test("Should fail register (data exist)", async () => {
+test("User - Auth: Register a new user (FAIL: data exist)", async () => {
 	const userData = {
 		full_name: "User Number Tow",
 		email_address: "micao@example.com",

@@ -46,7 +46,6 @@ const find = async (req, res) => {
 };
 
 const update = async (req, res) => {
-	console.log(req.body);
 	const id = parseInt(req.params.id);
 
 	// Check if only desired parameter provided
@@ -75,7 +74,6 @@ const update = async (req, res) => {
 
 		return res.success(200);
 	} catch (e) {
-		console.log(e);
 		return res.error(500, e.message);
 	}
 };
