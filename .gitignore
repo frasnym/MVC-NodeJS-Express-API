@@ -7,4 +7,6 @@ npm-debug.log
 
 # This
 /config/production.env
+/config/dev.env
+/config/test.env
 /coverage
