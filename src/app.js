@@ -2,6 +2,7 @@ const express = require("express");
 
 // Databases
 require("./db/mongoose");
+require("./models/custom_neckline.model");
 require("./db/sequelize");
 
 // Custom Middlewares
@@ -9,9 +10,10 @@ const { jsend } = require("./middlewares/api");
 // Routers
 const authRouter = require("./routers/users/auth.router");
 const productRouter = require("./routers/products/products.router");
+const fashionRouter = require("./routers/products/fashions.router");
 
-// AMPQ
-const publishToQueue = require("./services/MQService");
+// AMQP
+// const publishToQueue = require("./services/MQService");
 
 const app = express();
 app.use(express.json()); // body raw JSON
@@ -35,5 +37,6 @@ app.post("/msg", async (req, res) => {
 });
 app.use("/users/auth", authRouter);
 app.use("/products", productRouter);
+app.use("/fashions", fashionRouter);
 
 module.exports = app;

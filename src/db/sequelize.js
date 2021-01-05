@@ -56,7 +56,7 @@ sequelize
 		// console.log("Sequelize: All models were synchronized successfully.");
 	})
 	.catch((err) => {
-		console.log(err);
+		// console.log(err);
 	});
 
 db.sequelize = sequelize;
