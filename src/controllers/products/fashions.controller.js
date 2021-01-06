@@ -1,6 +1,8 @@
 const slugify = require("slugify");
+
 const ProductModel = require("../../models/product.model");
 const CategoryModel = require("../../models/category.model");
+const queryHelper = require("../../helpers/query");
 
 const create = async (req, res) => {
 	// check if category available
@@ -39,14 +41,20 @@ const read = async (_req, res) => {
 		const products = await ProductModel.find()
 			.populate({
 				path: "brand",
+				select: queryHelper.generateUnSelect("customer", "brand"),
 			})
 			.populate({
 				path: "category",
+				select: queryHelper.generateUnSelect("customer", "category"),
 			})
 			.populate({
 				path: "custom_neckline",
-				populate: { path: "model" },
-			}).customer;
+				populate: {
+					path: "model",
+					select: queryHelper.generateUnSelect("customer", "model"),
+				},
+			})
+			.select(queryHelper.generateUnSelect("customer", "product"));
 
 		return res.success(200, products);
 	} catch (e) {
