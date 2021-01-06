@@ -1,7 +1,5 @@
 const slugify = require("slugify");
-const Category = require("../../models/category.model");
-
-const categoryModel = require("../../models/category.model");
+const CategoryModel = require("../../models/category.model");
 
 /**
  * Populate Categories Children
@@ -32,7 +30,7 @@ function populateCategories(categories, parentId = null) {
 }
 
 /**
- * Generate Category Slug
+ * Generate Category Slug: Loop Through Parent
  * @param {Array} slugArray
  * @param {String} name : category name
  * @param {String} parentId : category ObjectId
@@ -41,7 +39,7 @@ async function populateSlug(slugArray, name, parentId = null) {
 	slugArray.push(name);
 
 	if (parentId) {
-		const category = await Category.findById(parentId);
+		const category = await CategoryModel.findById(parentId);
 		await populateSlug(slugArray, category.name, category.parentId);
 	}
 
@@ -57,7 +55,7 @@ const create = async (req, res) => {
 
 	if (req.body.parentId) {
 		// check if parentId available
-		const exists = await categoryModel.checkDocsValidity(req.body.parentId);
+		const exists = await CategoryModel.checkDocsValidity(req.body.parentId);
 		if (!exists) {
 			return res.error(404, "parentId not found!");
 		}
@@ -74,7 +72,7 @@ const create = async (req, res) => {
 	categoryObj.slug = slug; // store slug to Object
 
 	try {
-		const category = new categoryModel(categoryObj);
+		const category = new CategoryModel(categoryObj);
 		await category.save();
 
 		return res.success(201, category);
@@ -85,7 +83,7 @@ const create = async (req, res) => {
 
 const read = async (req, res) => {
 	try {
-		const categories = await categoryModel.find({});
+		const categories = await CategoryModel.find({});
 
 		return res.success(200, populateCategories(categories));
 	} catch (e) {

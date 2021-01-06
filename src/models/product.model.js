@@ -1,5 +1,53 @@
 const mongoose = require("mongoose");
 
+const customNecklineSchema = new mongoose.Schema(
+	{
+		model: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Custom_Neckline",
+		},
+		image_url: {
+			type: String,
+			required: true,
+		},
+	},
+	{
+		_id: false,
+	}
+);
+
+const customSleeveSchema = new mongoose.Schema(
+	{
+		model: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Custom_Sleeve_Type",
+		},
+		image_url: {
+			type: String,
+			required: true,
+		},
+	},
+	{
+		_id: false,
+	}
+);
+
+const customLengthSchema = new mongoose.Schema(
+	{
+		model: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Custom_Length",
+		},
+		image_url: {
+			type: String,
+			required: true,
+		},
+	},
+	{
+		_id: false,
+	}
+);
+
 const productSchema = new mongoose.Schema(
 	{
 		name: {
@@ -32,56 +80,24 @@ const productSchema = new mongoose.Schema(
 			ref: "Brand",
 			required: true,
 		},
-		colors: [
+		color: {
+			name: {
+				type: String,
+				required: true,
+			},
+			base: {
+				type: String,
+				required: true,
+			},
+		},
+		images: [
 			{
-				name: {
-					type: String,
-					required: true,
-					trim: true,
-				},
-				images: [
-					{
-						type: String,
-					},
-				],
-				custom_neckline: [
-					{
-						model: {
-							type: mongoose.Schema.Types.ObjectId,
-							ref: "Custom_Neckline",
-						},
-						image_url: {
-							type: String,
-							required: true,
-						},
-					},
-				],
-				custom_sleeve_type: [
-					{
-						model: {
-							type: mongoose.Schema.Types.ObjectId,
-							ref: "Custom_Sleeve_Type",
-						},
-						image_url: {
-							type: String,
-							required: true,
-						},
-					},
-				],
-				custom_length: [
-					{
-						model: {
-							type: mongoose.Schema.Types.ObjectId,
-							ref: "Custom_Length",
-						},
-						image_url: {
-							type: String,
-							required: true,
-						},
-					},
-				],
+				type: String,
 			},
 		],
+		custom_neckline: [customNecklineSchema],
+		custom_sleeve_type: [customSleeveSchema],
+		custom_length: [customLengthSchema],
 		// ocassion: [
 		//     {
 		//         type: mongoose.Schema.Types.ObjectId,

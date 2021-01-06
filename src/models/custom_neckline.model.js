@@ -16,6 +16,10 @@ customNecklineModel = mongoose.model("Custom_Neckline", customNecklineSchema);
 customNecklineModel.find({}, async function (err, docs) {
 	const datas = [
 		{
+			name: "Default",
+			sample: "Default",
+		},
+		{
 			name: "Wide V",
 			sample: "https://www.eshakti.com/styling%20images/Wide%20V.jpg",
 		},

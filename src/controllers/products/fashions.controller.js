@@ -1,20 +1,30 @@
 const slugify = require("slugify");
 const ProductModel = require("../../models/product.model");
+const CategoryModel = require("../../models/category.model");
 
 const create = async (req, res) => {
-	const { name, price, description, colors, brand } = req.body; // Destructure
+	// check if category available
+	const exists = await CategoryModel.checkDocsValidity(req.body.category);
+	if (!exists) {
+		return res.error(404, "Category not found!");
+	}
+	// TODO check if brand available
 
-	// Create new Product
-	const product = new ProductModel({
-		name,
-		slug: slugify(name),
-		price,
-		description,
-		colors,
-		brand,
-	});
+	const productObj = {
+		name: req.body.name,
+		slug: slugify(`${req.body.name}-${req.body.color.name}`),
+		price: req.body.price,
+		description: req.body.description,
+		color: req.body.color,
+		images: req.body.images,
+		category: req.body.category,
+		brand: req.body.brand,
+		custom_neckline: req.body.custom_neckline,
+	};
 
 	try {
+		// create new product
+		const product = new ProductModel(productObj);
 		await product.save();
 
 		return res.success(201, product);
@@ -31,12 +41,12 @@ const read = async (_req, res) => {
 				path: "brand",
 			})
 			.populate({
-				path: "colors",
-				populate: {
-					path: "custom_neckline",
-					populate: { path: "model" },
-				},
-			});
+				path: "category",
+			})
+			.populate({
+				path: "custom_neckline",
+				populate: { path: "model" },
+			}).customer;
 
 		return res.success(200, products);
 	} catch (e) {
