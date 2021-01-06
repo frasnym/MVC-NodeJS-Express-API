@@ -13,7 +13,7 @@ const customNecklineSchema = new mongoose.Schema({
 
 customNecklineModel = mongoose.model("Custom_Neckline", customNecklineSchema);
 
-customNecklineModel.countDocuments({}, async function (err, count) {
+customNecklineModel.find({}, async function (err, docs) {
 	const datas = [
 		{
 			name: "Wide V",
@@ -29,10 +29,15 @@ customNecklineModel.countDocuments({}, async function (err, count) {
 				"https://www.eshakti.com/styling%20images/Wide%20Deep%20Scoop.jpg",
 		},
 	];
-	if (count < datas.length) {
-		await customNecklineModel.deleteMany();
+	if (docs.length < datas.length) {
 		for (const data in datas) {
-			new customNecklineModel(datas[data]).save();
+			if (docs[data]) {
+				if (docs[data].name !== datas[data].name) {
+					new customNecklineModel(datas[data]).save();
+				}
+			} else {
+				new customNecklineModel(datas[data]).save();
+			}
 		}
 	}
 });

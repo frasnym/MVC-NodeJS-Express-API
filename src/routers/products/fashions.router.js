@@ -4,6 +4,6 @@ const fashionsController = require("../../controllers/products/fashions.controll
 
 const router = new express.Router();
 
-router.route("/").post(fashionsController.create);
+router.route("/").post(fashionsController.create).get(fashionsController.read);
 
 module.exports = router;

@@ -7,12 +7,12 @@ const productSchema = new mongoose.Schema(
 			required: true,
 			trim: true,
 		},
-		// slug: {
-		// 	type: String,
-		// 	required: true,
-		// 	trim: true,
-		// 	unique: true,
-		// },
+		slug: {
+			type: String,
+			trim: true,
+			unique: true,
+			required: true,
+		},
 		price: {
 			type: Number,
 			required: true,
@@ -22,9 +22,19 @@ const productSchema = new mongoose.Schema(
 			required: true,
 			trim: true,
 		},
-		style: [
+		category: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Category",
+			required: true,
+		},
+		brand: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Brand",
+			required: true,
+		},
+		colors: [
 			{
-				color: {
+				name: {
 					type: String,
 					required: true,
 					trim: true,
@@ -39,7 +49,6 @@ const productSchema = new mongoose.Schema(
 						model: {
 							type: mongoose.Schema.Types.ObjectId,
 							ref: "Custom_Neckline",
-							unique: true,
 						},
 						image_url: {
 							type: String,
@@ -47,43 +56,32 @@ const productSchema = new mongoose.Schema(
 						},
 					},
 				],
-				// custom_sleeve_type: [
-				// 	{
-				// 		model: {
-				// 			type: mongoose.Schema.Types.ObjectId,
-				// 			ref: "Custom_Sleeve_Type",
-				// 		},
-				// 		image_url: {
-				// 			type: String,
-				// 			required: true,
-				// 		},
-				// 	},
-				// ],
-				// custom_length: [
-				// 	{
-				// 		model: {
-				// 			type: mongoose.Schema.Types.ObjectId,
-				// 			ref: "Custom_Length",
-				// 		},
-				// 		image_url: {
-				// 			type: String,
-				// 			required: true,
-				// 		},
-				// 	},
-				// ],
+				custom_sleeve_type: [
+					{
+						model: {
+							type: mongoose.Schema.Types.ObjectId,
+							ref: "Custom_Sleeve_Type",
+						},
+						image_url: {
+							type: String,
+							required: true,
+						},
+					},
+				],
+				custom_length: [
+					{
+						model: {
+							type: mongoose.Schema.Types.ObjectId,
+							ref: "Custom_Length",
+						},
+						image_url: {
+							type: String,
+							required: true,
+						},
+					},
+				],
 			},
 		],
-
-		// category: {
-		// 	type: mongoose.Schema.Types.ObjectId,
-		// 	ref: "Category",
-		// 	required: true,
-		// },
-		// brand: {
-		// 	type: mongoose.Schema.Types.ObjectId,
-		// 	ref: "Brand",
-		// 	required: true,
-		// },
 		// ocassion: [
 		//     {
 		//         type: mongoose.Schema.Types.ObjectId,
