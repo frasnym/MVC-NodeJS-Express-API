@@ -8,7 +8,7 @@ const create = async (req, res) => {
 	// check if category available
 	const exists = await CategoryModel.checkDocsValidity(req.body.category);
 	if (!exists) {
-		return res.error(404, "Category not found!");
+		return res.fail(404, "Category not found!");
 	}
 	// TODO check if brand available
 
@@ -35,7 +35,7 @@ const create = async (req, res) => {
 	}
 };
 
-const read = async (_req, res) => {
+const read = async (req, res) => {
 	try {
 		// Read all Products
 		const products = await ProductModel.find()
@@ -62,4 +62,33 @@ const read = async (_req, res) => {
 	}
 };
 
-module.exports = { create, read };
+const find = async (req, res) => {
+	const slug = req.params.slug;
+
+	try {
+		// find one product by slug
+		let product = await ProductModel.findOne({ slug }).select(
+			queryHelper.generateUnSelect("customer", "product")
+		);
+
+		// fail if not found
+		if (!product) {
+			return res.fail(404);
+		}
+
+		product = product.toJSON(); // combine object preparation
+
+		// find other product with same name
+		const variations = await ProductModel.find({
+			name: product.name,
+			slug: { $ne: slug },
+		}).select("color.name images slug -_id");
+		product.variations = variations;
+
+		return res.success(200, product);
+	} catch (e) {
+		return res.error(500, e.message);
+	}
+};
+
+module.exports = { create, read, find };

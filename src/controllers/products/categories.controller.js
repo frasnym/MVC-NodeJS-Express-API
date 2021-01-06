@@ -57,7 +57,7 @@ const create = async (req, res) => {
 		// check if parentId available
 		const exists = await CategoryModel.checkDocsValidity(req.body.parentId);
 		if (!exists) {
-			return res.error(404, "parentId not found!");
+			return res.fail(404, "parentId not found!");
 		}
 		categoryObj.parentId = req.body.parentId; // store parentId to Object
 
@@ -87,7 +87,7 @@ const read = async (req, res) => {
 
 		return res.success(200, populateCategories(categories));
 	} catch (e) {
-		return res.error(404);
+		return res.fail(404);
 	}
 };
 
