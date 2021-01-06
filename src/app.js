@@ -2,8 +2,7 @@ const express = require("express");
 
 // Databases
 require("./db/mongoose");
-require("./models/custom_neckline.model");
-require("./models/brand.model");
+// require("./helpers/seeder");
 require("./db/sequelize");
 
 // Custom Middlewares

@@ -32,7 +32,7 @@ categorySchema.statics = {
 		if (!isValid) {
 			return false;
 		}
-		const exists = await Category.exists({ _id: parentId });
+		const exists = await Category.findOne({ _id: parentId });
 		return exists;
 	},
 };

@@ -36,15 +36,28 @@ const create = async (req, res) => {
 };
 
 const read = async (req, res) => {
+	const categoryMatch = {};
+	if (req.query.category) {
+		categoryMatch.slug = new RegExp(req.query.category); // convert string to regex
+	}
+	const brandMatch = {};
+	if (req.query.brand) {
+		brandMatch.slug = new RegExp(req.query.brand); // convert string to regex
+	}
+
+	// TODO Sort & Pagination
+
 	try {
 		// Read all Products
 		const products = await ProductModel.find()
 			.populate({
 				path: "brand",
+				match: brandMatch, // match uses regexch
 				select: queryHelper.generateUnSelect("customer", "brand"),
 			})
 			.populate({
 				path: "category",
+				match: categoryMatch, // match uses regex
 				select: queryHelper.generateUnSelect("customer", "category"),
 			})
 			.populate({
@@ -56,7 +69,12 @@ const read = async (req, res) => {
 			})
 			.select(queryHelper.generateUnSelect("customer", "product"));
 
-		return res.success(200, products);
+		return res.success(
+			200,
+			products.filter(
+				(product) => product.brand !== null && product.category !== null
+			) // TODO need optimization: didn't need filter
+		);
 	} catch (e) {
 		return res.error(500, e.message);
 	}
