@@ -1,4 +1,5 @@
 const slugify = require("slugify");
+const Category = require("../../models/category.model");
 
 const categoryModel = require("../../models/category.model");
 
@@ -30,11 +31,29 @@ function populateCategories(categories, parentId = null) {
 	return categoryList;
 }
 
+/**
+ * Generate Category Slug
+ * @param {Array} slugArray
+ * @param {String} name : category name
+ * @param {String} parentId : category ObjectId
+ */
+async function populateSlug(slugArray, name, parentId = null) {
+	slugArray.push(name);
+
+	if (parentId) {
+		const category = await Category.findById(parentId);
+		await populateSlug(slugArray, category.name, category.parentId);
+	}
+
+	return slugArray;
+}
+
 const create = async (req, res) => {
 	const categoryObj = {
 		name: req.body.name,
-		slug: slugify(req.body.name), // slugify some string
 	};
+
+	let slug = slugify(req.body.name);
 
 	if (req.body.parentId) {
 		// check if parentId available
@@ -42,12 +61,20 @@ const create = async (req, res) => {
 		if (!exists) {
 			return res.error(404, "parentId not found!");
 		}
-		categoryObj.parentId = req.body.parentId;
-	}
+		categoryObj.parentId = req.body.parentId; // store parentId to Object
 
-	const category = new categoryModel(categoryObj);
+		// generate category slug
+		const slugResult = await populateSlug(
+			[],
+			req.body.name,
+			req.body.parentId
+		);
+		slug = slugify(slugResult.join(" "));
+	}
+	categoryObj.slug = slug; // store slug to Object
 
 	try {
+		const category = new categoryModel(categoryObj);
 		await category.save();
 
 		return res.success(201, category);
